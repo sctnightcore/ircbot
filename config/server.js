@@ -1,5 +1,5 @@
 module.exports = {
-    server: 'irc.freenode.org',
+    server: 'irc.freenode.net',
     port: 6697,
     secure: true,
     name: 'OpenKore',

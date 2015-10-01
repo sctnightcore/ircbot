@@ -5,7 +5,8 @@ var client, core;
 
 var greeting =
 {
-    list: [],
+    list: {},
+    timeout: false,
 
     load_log: function()
     {
@@ -36,27 +37,54 @@ var greeting =
 
     message: function(from, to, message)
     {
-        console.log(from, to, message);
+        var channel = client.chans[to];
+        if(channel)
+        {
+            // Only greet regular users the first time they speak
+            var mode = channel.users[from];
 
-        // Save list of greeted users into file
-        greeting.save_log();
+            if(mode == '' && !greeting.list[from] && !greeting.timeout)
+            {
+                greeting.list[from] = true;
+                greeting.timeout = true;
+                
+                setTimeout(function()
+                {
+                    client.say(to, "Hi there " + from + ", welcome to #OpenKore! Feel free to ask questions about running your bot, configuration, or writing plugins.");
+                }, 1000);
+
+                setTimeout(function()
+                {
+                    client.say(to, "After asking your question, please be patient! Most of us have jobs and you might have to wait a couple hours for a reply.");
+                }, 3000);
+
+                // Reset timeout after 1 hour
+                setTimeout(function()
+                {
+                    greeting.timeout = false;
+                }, 1000 * 60 * 60);
+
+                // Save list of greeted users into file
+                greeting.save_log();
+            }
+        }
     },
 
     bind: function()
     {
-        for(var i = 0, l = burn.events.length; i < l; i++)
+        for(var i = 0, l = greeting.events.length; i < l; i++)
         {
-            var event = burn.events[i];
-            client.addListener(event, burn[event]);
+            var event = greeting.events[i];
+            client.addListener(event, greeting[event]);
         }
     },
 
     unbind: function()
     {
-        for(var i = 0, l = burn.events.length; i < l; i++)
+        for(var i = 0, l = greeting.events.length; i < l; i++)
         {
-            var event = burn.events[i];
-            client.removeListener(event, burn[event]);
+            var event = greeting.events[i];
+            client.removeListener(event, greeting[event]);
         }
     }
 };
@@ -71,7 +99,7 @@ module.exports =
         client = _client;
         core = _core;
 
-        burn.bind();
+        greeting.bind();
     },
     
     unload: function(_client, _core)
@@ -79,8 +107,8 @@ module.exports =
         // Save list of greeted users into file
         greeting.save_log();
         
-        burn.unbind();
-        delete client, core, burn, crypto;
+        greeting.unbind();
+        delete client, core, greeting;
     }
 }
 
