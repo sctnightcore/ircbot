@@ -50,11 +50,11 @@ var prompt =
     // Send a message to someone
     say: function(message)
     {
-        message = module.split(' ');
-        var channel = message.shift();
+        message = message.split(' ');
+        var destination = message.shift();
         message = message.join(' ');
         
-        prompt.client.say(channel, message);
+        prompt.client.say(destination, message);
     },
 
     // Send a CTCP message
