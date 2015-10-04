@@ -1,1 +1,1 @@
-module.exports = ['admin', 'github', 'topic', 'greeting'];
+module.exports = ['auth', 'admin', 'github', 'topic', 'greeting'];

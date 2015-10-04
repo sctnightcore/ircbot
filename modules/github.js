@@ -46,7 +46,7 @@ var github =
     client: false,
     server: false,
     port: 1234,
-    channel: '#wetfish',
+    channel: '#openkore',
     events: ['gollum', 'push'],
 
     groups:
