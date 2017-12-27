@@ -1,1 +1,1 @@
-module.exports = ['auth', 'admin', 'github', 'topic', 'greeting'];
+module.exports = ['sctnightcore'];
